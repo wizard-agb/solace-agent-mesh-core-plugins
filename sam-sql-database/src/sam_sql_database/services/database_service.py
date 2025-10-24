@@ -190,12 +190,14 @@ class DatabaseService(ABC):
         if not self.engine:
             raise RuntimeError("Database engine is not initialized.")
 
+        log.info("engine name: %s", self.engine.name)
+
         if self.engine.name == "mysql":
             query = f"SELECT DISTINCT `{column_name}` FROM `{table_name}` WHERE `{column_name}` IS NOT NULL ORDER BY RAND() LIMIT {limit}"
         elif self.engine.name == "postgresql":
-            query = f'SELECT DISTINCT "{column_name}" FROM "{table_name}" WHERE "{column_name}" IS NOT NULL ORDER BY RANDOM() LIMIT {limit}'
+            query = f'SELECT DISTINCT "{column_name}" FROM "{table_name}" WHERE "{column_name}" IS NOT NULL LIMIT {limit}'
         elif self.engine.name == "sqlite":
-            query = f'SELECT DISTINCT "{column_name}" FROM "{table_name}" WHERE "{column_name}" IS NOT NULL ORDER BY RANDOM() LIMIT {limit}'
+            query = f'SELECT DISTINCT "{column_name}" FROM "{table_name}" WHERE "{column_name}" IS NOT NULL LIMIT {limit}'
         else:
             query = f'SELECT DISTINCT "{column_name}" FROM "{table_name}" WHERE "{column_name}" IS NOT NULL LIMIT {limit}'
 
@@ -248,9 +250,11 @@ class DatabaseService(ABC):
             raise RuntimeError("Database engine is not initialized.")
 
         schema_info: Dict[str, Any] = {}
+        log.info("getting tables for schema representation")
         tables = self.get_tables()
 
         for table_name in tables:
+            log.info("processing table: %s", table_name)
             table_details: Dict[str, Any] = {
                 "columns": {},
                 "primary_keys": self.get_primary_keys(table_name),
@@ -259,6 +263,7 @@ class DatabaseService(ABC):
             }
 
             columns_data = self.get_columns(table_name)
+            log.info("processing columns for table: %s", table_name)
             for col_data in columns_data:
                 col_name = col_data["name"]
                 col_info: Dict[str, Any] = {
