@@ -209,7 +209,9 @@ def initialize_sql_agent(host_component: Any, init_config: SqlAgentInitConfigMod
         if init_config.auto_detect_schema:
             log.info("%s Auto-detecting database schema...", log_identifier)
             schema_summary_for_llm = db_service.get_schema_summary_for_llm()
+            log.info("%s Schema summary for LLM generated.", log_identifier)
             detailed_schema_dict = db_service.get_detailed_schema_representation()
+            log.info("%s Detailed schema representation generated.", log_identifier)
             detailed_schema_yaml = yaml.dump(
                 detailed_schema_dict, sort_keys=False, allow_unicode=True
             )
