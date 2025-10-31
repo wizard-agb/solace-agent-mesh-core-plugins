@@ -23,7 +23,7 @@ from .csv_import_service import CsvImportService
 class DatabaseService(ABC):
     """Abstract base class for database services."""
 
-    def __init__(self, connection_params: Dict[str, Any], query_timeout: int = 300):
+    def __init__(self, connection_params: Dict[str, Any], query_timeout: int = 30):
         """Initialize the database service.
 
         Args:
